@@ -1,67 +1,72 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.Collections;
 
 public class HighPeak {
 
-    static int Diff(int array[], int N, int M)
-    {
-        int result = Integer.MAX_VALUE;
-        Arrays.sort(array);
-        for (int i=0; i<= N-M;i++)
-            result = Math.min(result, array[i + M - 1] - array[i]);
-        return result;
-    }
-
-    static int fe(int res,int array[], int N, int M)
-    {
-        int result = Integer.MAX_VALUE;
-        for(int i=0; i<=N; i++)
-        {
-            result = Math.min(result, array[i + M - 1] - array[i]);
-            if (res==result)
-                return i;
-        }
-        return 0;
-    }
-
-    public static void main(String[] args) {
-    	try {
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		String split = null;
+		try {
 			FileReader fr=new FileReader("C:\\Users\\dell\\eclipse-workspace\\Practice\\src\\sampleinput.txt");
 			BufferedReader bf = new BufferedReader(fr);
+			FileWriter fw = new FileWriter("C:\\Users\\dell\\eclipse-workspace\\Practice\\src\\output.txt");
+			
 			String s = bf.readLine();
-			int c=0;
-			ArrayList al = new ArrayList();
+			ArrayList al = new ArrayList<Integer>();
+			ArrayList al2 = new ArrayList<String>();
 			while(s!=null) {
-				String[] split2 = s.split(":");
-				al.add(split2[split2.length-1]);
-				c++;
-				s = bf.readLine();
+				al2.add(s);
+				String[] split2 = s.split( " ");
+					if(split2[split2.length-1].equals("" )||split2[split2.length-1].endsWith("Prices:")) {}
+					else {
+					al.add(Integer.parseInt(split2[split2.length-1]));}
+					s = bf.readLine();
 			}
-			
-			
+            Collections.sort(al);
+            Integer ar[] =new Integer[al.size()];
+            al.toArray(ar);
+            int k=ar[0];
+            int start=0;
+            int min=ar[ar.length-1];
+            for (int i = 1; i <=ar.length-k; i++) {
+				int diff=ar[i+k-1]-ar[i];
+				if(min>diff) {
+					min=diff;
+					start=i;
+				}
+			}
+            System.out.println(min);
+            String ar2[] =new String[al2.size()];
+            al2.toArray(ar2);
+            int l=0;
+            
+            fw.write("The goodies selected for distribution are:");
+            fw.write("\n");
+            for (int i = start; i <=start+k-1; i++) {
+            	int d=ar[i];
+				for(int j=4;j<ar2.length;j++) {
+					String[] split2 = ar2[j].split (" ");
+					Integer stt=Integer.parseInt(split2[split2.length-1]);
+					if(stt==d) {
+						fw.write(ar2[j]);
+						fw.write("\n");
+					}
+				}
+			}
+            fw.write(min+"");
+			fw.flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-        int array[]={7980,22349,999,2799,229900,11101,9999,2195,9800,4999};
-        String items[]={ "MI Band: 999","Sandwich Toaster: 2195" ,"Cult Pass: 2799","Scale: 4999","Fitbit Plus: 7980","Microwave Oven: 9800"  ,"Alexa: 9999","Digital Camera: 11101", "IPods: 22349","Macbook Pro: 229900" };
-        int N = array.length;
-        System.out.println("Enter the number of employees");
-        Scanner s = new Scanner(System.in);
-        int M=s.nextInt();
-        int result=Diff(array, N, M);
-        System.out.println("Number of the employees:"+M);
-        int startindex=fe(result,array,N,M);
-        System.out.println("Here the goodies that are selected for distribution are:");
-        
-        for(int i=startindex;i<startindex+M;i++)
-            System.out.println(items[i]);
-        System.out.println("\n");
-        System.out.println("And the difference between the chosen goodies with highest price and the lowest price is:"+result);
-    }
+		
+	}
+
+	
+
 }
